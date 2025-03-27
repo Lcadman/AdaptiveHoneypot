@@ -35,3 +35,53 @@ class EpsilonGreedyBandit:
         # Incremental update of Q-value
         self.values[dwell_time] += self.alpha * (reward - self.values[dwell_time])
         print(f"Updated Q-value for {dwell_time} minutes: {self.values[dwell_time]:.3f}")
+
+
+class UCBBandit:
+    def __init__(self, dwell_times, c=1.0):
+        """
+        Initialize the UCB bandit with a list of possible dwell times (in minutes)
+        and an exploration parameter c.
+        
+        Parameters:
+          dwell_times: list of possible dwell times (floats), e.g., [5.0, 5.5, ..., 15.0]
+          c: exploration parameter controlling the width of the confidence interval.
+        """
+        self.dwell_times = dwell_times
+        self.c = c
+        self.counts = {dt: 0 for dt in dwell_times}   # Number of times each dwell time was chosen.
+        self.values = {dt: 0.0 for dt in dwell_times}   # Estimated average reward for each dwell time.
+        self.total_count = 0  # Total number of selections.
+
+    def select_action(self):
+        """
+        Select a dwell time using the UCB formula.
+        Returns the dwell time with the highest UCB value.
+        """
+        self.total_count += 1
+        ucb_values = {}
+        # Ensure each dwell time is tried at least once.
+        for dt in self.dwell_times:
+            if self.counts[dt] == 0:
+                print(f"Selecting {dt:.2f} minutes because it has not been tried yet.")
+                return dt
+            bonus = self.c * math.sqrt(math.log(self.total_count) / self.counts[dt])
+            ucb_values[dt] = self.values[dt] + bonus
+        # Debug: print all UCB values.
+        print(f"UCB values: {ucb_values}")
+        chosen_dt = max(ucb_values, key=ucb_values.get)
+        print(f"Selected dwell time: {chosen_dt:.2f} minutes based on UCB.")
+        return chosen_dt
+    
+    def update(self, dwell_time, reward):
+        """
+        Update the estimated reward (Q-value) for the chosen dwell time.
+        
+        Parameters:
+          dwell_time: the dwell time (in minutes) that was selected.
+          reward: the observed reward.
+        """
+        self.counts[dwell_time] += 1
+        # Incremental update of the Q-value (average reward)
+        self.values[dwell_time] += (reward - self.values[dwell_time]) / self.counts[dwell_time]
+        print(f"Updated Q-value for {dwell_time:.2f} minutes: {self.values[dwell_time]:.3f}")
