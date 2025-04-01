@@ -1,12 +1,7 @@
-# bandit/data_parser.py by Logan C
 import json
 import pandas as pd
 
 def parse_tcp_syn_data(filename):
-    """
-    Reads a JSONL file where each line is a JSON record.
-    Returns a pandas DataFrame with the parsed data.
-    """
     records = []
     with open(filename, 'r') as file:
         for line in file:
