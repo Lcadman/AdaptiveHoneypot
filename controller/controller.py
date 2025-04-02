@@ -24,7 +24,8 @@ def simulate_overlap_data(dwell_time, df):
 def main():
     df_all = parse_tcp_syn_data(DATA_FILE)
 
-    dwell_times = np.linspace(5, 15, 21).tolist()
+    dwell_times = np.linspace(2, 10, 15).tolist()
+    #dwell_times = np.linspace(5, 15, 21).tolist()
     agent = SimpleQAgent(dwell_times, alpha=0.1, gamma=0.9, epsilon=0.1)
 
     groups = df_all.groupby("DstIP")

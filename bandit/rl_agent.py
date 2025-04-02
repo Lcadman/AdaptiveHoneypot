@@ -11,11 +11,22 @@ class SimpleQAgent:
         self.q_table = {}
 
     def discretize_state(self, state):
-        return tuple(round(state[k], 2) for k in sorted(state.keys()))
+        state_tuple = []
+        for k in sorted(state.keys()):
+            val = state[k]
+            if isinstance(val, np.ndarray):
+                val = tuple(np.round(val, 2).tolist())
+            else:
+                try:
+                    val = round(val, 2)
+                except Exception:
+                    pass
+            state_tuple.append(val)
+        return tuple(state_tuple)
 
     def get_q_values(self, state_tuple):
         if state_tuple not in self.q_table:
-            self.q_table[state_tuple] = {action: 0.0 for action in self.dwell_times}
+            self.q_table[state_tuple] = {action: action for action in self.dwell_times}
         return self.q_table[state_tuple]
 
     def select_action(self, state):
