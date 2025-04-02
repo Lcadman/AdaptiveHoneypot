@@ -36,6 +36,7 @@ def compute_reward_for_dwell_time(df, dwell_time, alpha=1.0, beta=1.0, gamma=1.0
             sessions.append(max(current_session_scores))
         weighted_session_count += sum(sessions)
 
+    # Calculate the penalty for dwell time duration
     #base_penalty = 2 * np.log(1 + dwell_time)
     base_penalty = (dwell_time_seconds / 60) * 2
     if dwell_time < threshold:

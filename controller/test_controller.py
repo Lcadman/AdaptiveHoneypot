@@ -14,7 +14,7 @@ logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 
-file_handler = logging.FileHandler('test_controller.log')
+file_handler = logging.FileHandler('logs/test_controller.log')
 file_handler.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -27,11 +27,22 @@ logger.addHandler(file_handler)
 # Path to your historical data file
 DATA_FILE = "data/Bitwarden Data Mar 18 2025.json"
 
+def convert_state_for_json(state):
+    new_state = {}
+    for k, v in state.items():
+        if isinstance(v, np.ndarray):
+            new_state[k] = v.tolist()
+        else:
+            new_state[k] = v
+    return new_state
+
 def test_dwell_times_for_instance(df_instance, dwell_range):
     dstip = df_instance["DstIP"].iloc[0]
     initial_state = extract_state(df_instance)
+    # Convert state so it can be JSON serialized
+    json_state = convert_state_for_json(initial_state)
     logger.info(f"\nTesting honeypot instance for DstIP: {dstip}")
-    logger.info(f"Initial state: {json.dumps(initial_state)}")
+    logger.info(f"Initial state: {json.dumps(json_state)}")
     rows = []
     for dwell in dwell_range:
         reward_value = compute_reward_for_dwell_time(df_instance, dwell, alpha=1.0, beta=0.5, gamma=0.2)
@@ -66,7 +77,8 @@ def main():
             for row in rows:
                 row["OptimalDwell"] = optimal_dwell
                 row["OptimalReward"] = optimal_reward
-                row["InitialState"] = json.dumps(initial_state)
+                # Convert state to JSON-serializable string
+                row["InitialState"] = json.dumps(convert_state_for_json(initial_state))
                 writer.writerow(row)
 
 if __name__ == "__main__":

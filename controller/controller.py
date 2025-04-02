@@ -8,6 +8,19 @@ from bandit.state_extractor import extract_state
 from bandit.rl_agent import SimpleQAgent
 import datetime
 
+# Add the helper function for converting state for JSON serialization
+def convert_state_for_json(state):
+    """
+    Convert any numpy arrays in the state dictionary to lists so it can be JSON serialized.
+    """
+    new_state = {}
+    for k, v in state.items():
+        if isinstance(v, np.ndarray):
+            new_state[k] = v.tolist()
+        else:
+            new_state[k] = v
+    return new_state
+
 # For simulation, we'll use historical data as the feed
 DATA_FILE = "data/Bitwarden Data Mar 18 2025.json"
 
@@ -44,7 +57,9 @@ def main():
             print(f"\n--- Processing honeypot instance for destination IP: {dst} ---")
     
             state = extract_state(group_df)
-            print(f"Initial state: {state}")
+            # Convert state for JSON serialization
+            json_state = convert_state_for_json(state)
+            print(f"Initial state: {json_state}")
     
             selected_dwell = agent.select_action(state)
             print(f"Selected dwell time: {selected_dwell} minutes")
@@ -61,17 +76,17 @@ def main():
                 next_state = extract_state(overlap_data)
             else:
                 next_state = {k: 0 for k in state}
-            print(f"Next state: {next_state}")
+            print(f"Next state: {convert_state_for_json(next_state)}")
     
             agent.update(state, selected_dwell, reward_value, next_state)
     
-            # Log information to CSV
+            # Log information to CSV, converting state to JSON-serializable format
             log_row = {
                 "DstIP": dst,
-                "InitialState": json.dumps(state),
+                "InitialState": json.dumps(convert_state_for_json(state)),
                 "SelectedDwell": selected_dwell,
                 "Reward": reward_value,
-                "NextState": json.dumps(next_state)
+                "NextState": json.dumps(convert_state_for_json(next_state))
             }
             writer.writerow(log_row)
     
