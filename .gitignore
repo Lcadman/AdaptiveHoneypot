@@ -55,5 +55,6 @@ test-results/
 config.yaml
 *.local.*
 
-# Ignore the large JSON file
+# Ignore the large files
 *.json
+*.csv
