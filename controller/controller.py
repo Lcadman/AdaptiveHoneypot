@@ -30,7 +30,7 @@ def main():
     
     # Generate a timestamp string, e.g., "20250326_100458"
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"controller_output_{timestamp}.csv"
+    filename = f"logs/controller_output_{timestamp}.csv"
 
     # Then open the CSV file using this filename:
     with open(filename, "w", newline="") as csvfile:

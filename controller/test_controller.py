@@ -51,7 +51,7 @@ def main():
     
     # Generate a filename with date and time
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    csv_filename = f"dwell_rewards_{timestamp}.csv"
+    csv_filename = f"logs/dwell_rewards_{timestamp}.csv"
     
     # Open a CSV file to write the output
     with open(csv_filename, "w", newline="") as csvfile:
