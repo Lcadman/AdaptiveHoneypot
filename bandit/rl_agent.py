@@ -1,14 +1,25 @@
 import random
 import numpy as np
+import pickle
 
 
 class SimpleQAgent:
-    def __init__(self, dwell_times, alpha=0.1, gamma=0.9, epsilon=0.1):
+    def __init__(self, dwell_times, alpha=0.1, gamma=0.9, epsilon=0.1, save_file=None):
         self.dwell_times = dwell_times
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
         self.q_table = {}
+
+        self.save_file = save_file
+
+        if self.save_file is not None:
+            try:
+                with open(self.save_file, 'rb') as f:
+                    self.q_table = pickle.load(f)
+                print("Loaded persistent Q-table")
+            except FileNotFoundError:
+                print("No persistent Q-table found, starting fresh")
 
     def discretize_state(self, state):
         state_tuple = []
@@ -27,7 +38,6 @@ class SimpleQAgent:
     def get_q_values(self, state_tuple):
         if state_tuple not in self.q_table:
             self.q_table[state_tuple] = {action: 0.0 for action in self.dwell_times}
-            #self.q_table[state_tuple] = {action: action for action in self.dwell_times}
         return self.q_table[state_tuple]
 
     def select_action(self, state):
@@ -54,3 +64,10 @@ class SimpleQAgent:
         self.q_table[state_tuple][action] = new_q
 
         print(f"Updated Q-value for state {state_tuple}, action {action}: {new_q:.3f}")
+        self.save_q_table()
+
+    def save_q_table(self):
+        if self.save_file is not None:
+            with open(self.save_file, 'wb') as f:
+                pickle.dump(self.q_table, f)
+            print("Saved persistent Q-table")
