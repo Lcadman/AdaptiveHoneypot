@@ -57,8 +57,8 @@ def test_dwell_times_for_instance(df_instance, dwell_range):
 def main():
     df_all = parse_tcp_syn_data(DATA_FILE)
     
-    # Define the range of dwell times to test, e.g., from 5 to 15 minutes in 0.5 minute increments
-    dwell_range = np.arange(5, 15.5, 0.5)  # 5, 5.5, 6, ..., 15
+    # Define the range of dwell times to test
+    dwell_range = np.arange(5, 15.5, 0.5)
     
     # Generate a filename with date and time
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")

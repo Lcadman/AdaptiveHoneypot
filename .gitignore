@@ -54,6 +54,8 @@ test-results/
 # Ignore local config
 config.yaml
 *.local.*
+config.py
+**/keys/
 
 # Ignore the large files
 *.json
