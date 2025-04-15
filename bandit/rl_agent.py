@@ -15,7 +15,7 @@ class SimpleQAgent:
 
         if self.save_file is not None:
             try:
-                with open(self.save_file, 'rb') as f:
+                with open(self.save_file, "rb") as f:
                     self.q_table = pickle.load(f)
                 print("Loaded persistent Q-table")
             except FileNotFoundError:
@@ -68,6 +68,6 @@ class SimpleQAgent:
 
     def save_q_table(self):
         if self.save_file is not None:
-            with open(self.save_file, 'wb') as f:
+            with open(self.save_file, "wb") as f:
                 pickle.dump(self.q_table, f)
             print("Saved persistent Q-table")

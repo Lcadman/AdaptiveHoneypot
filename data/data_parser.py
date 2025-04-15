@@ -1,9 +1,10 @@
 import json
 import pandas as pd
 
+
 def parse_tcp_syn_data(filename):
     records = []
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         for line in file:
             try:
                 record = json.loads(line)
@@ -13,14 +14,15 @@ def parse_tcp_syn_data(filename):
     # Convert list of records to a DataFrame
     df = pd.DataFrame(records)
     # Convert 'TimeSinceStart' to numeric (in seconds)
-    df['TimeSinceStart'] = pd.to_numeric(df['TimeSinceStart'], errors='coerce')
+    df["TimeSinceStart"] = pd.to_numeric(df["TimeSinceStart"], errors="coerce")
     # Optionally, convert the 'Time' field to datetime if needed:
-    df['Time'] = pd.to_datetime(df['Time'], errors='coerce')
+    df["Time"] = pd.to_datetime(df["Time"], errors="coerce")
     return df
 
+
 # Simple test code
-if __name__ == '__main__':
-    df = parse_tcp_syn_data('../data/Bitwarden Data Mar 18 2025.json')
+if __name__ == "__main__":
+    df = parse_tcp_syn_data("../data/Bitwarden Data Mar 18 2025.json")
     print("Data head:")
     print(df.head())
     print("Data info:")

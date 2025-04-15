@@ -1,4 +1,6 @@
-from honeypot.fabric_tools import config  # This file sets the environment variables for connecting to Fabric.
+from honeypot.fabric_tools import (
+    config,
+)  # This file sets the environment variables for connecting to Fabric.
 from fabrictestbed_extensions.fablib.fablib import FablibManager
 from time import sleep
 from tqdm import tqdm
@@ -9,12 +11,15 @@ DWELL_TIME_SECONDS = 300
 USER_DATA = "bash /local/repository/cloud_init.sh"
 LOCAL_PATH = "/Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric_tools/cloud_init.yaml"
 
+
 def launch_slice_with_fablib():
     fablib = FablibManager()
     sites_to_try = ["TACC", "WASH", "UTAH", "MAX"]
 
     try:
-        with yaspin(text="Creating slice and submitting to FABRIC...", color="cyan") as spinner:
+        with yaspin(
+            text="Creating slice and submitting to FABRIC...", color="cyan"
+        ) as spinner:
             slice = fablib.new_slice(name="honeypot_slice")
             node = None
             random.shuffle(sites_to_try)
@@ -38,6 +43,7 @@ def launch_slice_with_fablib():
         print("Error launching slice with fablib:", e)
         return None
 
+
 def start_remote_honeypot(node):
     try:
         print("Starting remote honeypot...")
@@ -50,6 +56,7 @@ def start_remote_honeypot(node):
             print(stderr)
     except Exception as e:
         print("Error starting remote honeypot:", e)
+
 
 def stop_remote_honeypot(node):
     try:
@@ -64,6 +71,7 @@ def stop_remote_honeypot(node):
     except Exception as e:
         print("Error stopping remote honeypot:", e)
 
+
 def excecute_startup_script(node):
     try:
         print("Executing startup script...")
@@ -72,7 +80,7 @@ def excecute_startup_script(node):
             "dnf install -y git python3 python3-pip gcc gcc-c++ make openssl-devel libffi-devel python3-devel wget",
             "git clone https://github.com/cowrie/cowrie.git /opt/cowrie",
             "cd /opt/cowrie && pip3 install --upgrade pip && pip3 install -r requirements.txt",
-            "mkdir -p /local/honeypot && wget -O /local/honeypot/local_honeypot.py https://yourserver.com/path/to/local_honeypot.py"
+            "mkdir -p /local/honeypot && wget -O /local/honeypot/local_honeypot.py https://yourserver.com/path/to/local_honeypot.py",
         ]
 
         stdout, stderr = node.execute(setup_commands)
@@ -94,6 +102,7 @@ def excecute_startup_script(node):
             print(stderr)
     except Exception as e:
         print("Error executing startup script:", e)
+
 
 def main():
     slice_obj = launch_slice_with_fablib()
@@ -128,7 +137,10 @@ def main():
     # Stop the honeypot
     stop_remote_honeypot(node)
 
-    print("Honeypot session complete. Ready for controller to retrieve data, if applicable.")
+    print(
+        "Honeypot session complete. Ready for controller to retrieve data, if applicable."
+    )
+
 
 if __name__ == "__main__":
     main()
