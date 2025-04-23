@@ -1,4 +1,4 @@
-from honeypot.fabric_tools import (
+from honeypot.fabric import (
     config,
 )  # This file sets the environment variables for connecting to Fabric.
 from fabrictestbed_extensions.fablib.fablib import FablibManager

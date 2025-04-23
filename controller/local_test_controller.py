@@ -7,7 +7,6 @@ import csv
 import datetime
 import json
 
-# Set up the logger to output to both console and a file
 logger = logging.getLogger("test_controller")
 logger.setLevel(logging.DEBUG)
 
@@ -24,7 +23,6 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-# Path to your historical data file
 DATA_FILE = "data/Bitwarden Data Mar 18 2025.json"
 
 

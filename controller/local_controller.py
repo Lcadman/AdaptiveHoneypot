@@ -9,11 +9,7 @@ from bandit.rl_agent import SimpleQAgent
 import datetime
 
 
-# Add the helper function for converting state for JSON serialization
 def convert_state_for_json(state):
-    """
-    Convert any numpy arrays in the state dictionary to lists so it can be JSON serialized.
-    """
     new_state = {}
     for k, v in state.items():
         if isinstance(v, np.ndarray):
@@ -50,7 +46,6 @@ def main():
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"logs/controller_output_{timestamp}.csv"
 
-    # Then open the CSV file using this filename:
     with open(filename, "w", newline="") as csvfile:
         fieldnames = ["DstIP", "InitialState", "SelectedDwell", "Reward", "NextState"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -62,7 +57,7 @@ def main():
             print(f"\n--- Processing honeypot instance for destination IP: {dst} ---")
 
             state = extract_state(group_df)
-            # Convert state for JSON serialization
+
             json_state = convert_state_for_json(state)
             print(f"Initial state: {json_state}")
 
