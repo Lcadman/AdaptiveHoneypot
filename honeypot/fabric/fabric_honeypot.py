@@ -6,10 +6,11 @@ from time import sleep
 from tqdm import tqdm
 from yaspin import yaspin
 import random
+import socket
 
 DWELL_TIME_SECONDS = 300
 USER_DATA = "bash /local/repository/cloud_init.sh"
-LOCAL_PATH = "/Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric_tools/cloud_init.yaml"
+LOCAL_PATH = "/Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric/cloud_init.yaml"
 
 
 def launch_slice_with_fablib():
@@ -47,7 +48,7 @@ def launch_slice_with_fablib():
 def start_remote_honeypot(node):
     try:
         print("Starting remote honeypot...")
-        command = "bash /opt/cowrie/bin/cowrie start"
+        command = "docker run -d --name glutton --net=host -v /local/honeypot:/data mohammadne/glutton"
         stdout, stderr = node.execute(command)
         print("Remote honeypot start output:")
         print(stdout)
@@ -61,7 +62,7 @@ def start_remote_honeypot(node):
 def stop_remote_honeypot(node):
     try:
         print("Stopping remote honeypot...")
-        command = "bash /opt/cowrie/bin/cowrie stop"
+        command = "docker stop glutton && docker rm glutton"
         stdout, stderr = node.execute(command)
         print("Remote honeypot stop output:")
         print(stdout)
@@ -77,9 +78,8 @@ def excecute_startup_script(node):
         print("Executing startup script...")
         setup_commands = [
             "dnf update -y",
-            "dnf install -y git python3 python3-pip gcc gcc-c++ make openssl-devel libffi-devel python3-devel wget",
-            "git clone https://github.com/cowrie/cowrie.git /opt/cowrie",
-            "cd /opt/cowrie && pip3 install --upgrade pip && pip3 install -r requirements.txt",
+            "dnf install -y docker wget",
+            "systemctl start docker && systemctl enable docker",
             "mkdir -p /local/honeypot && wget -O /local/honeypot/local_honeypot.py https://yourserver.com/path/to/local_honeypot.py",
         ]
 
@@ -102,6 +102,17 @@ def excecute_startup_script(node):
             print(stderr)
     except Exception as e:
         print("Error executing startup script:", e)
+
+
+def retrieve_data_from_honeypot(node):
+    try:
+        print("Retrieving data file from honeypot node...")
+        remote_path = "/local/honeypot/output.log"
+        local_path = "/Users/lcadman/Documents/Research/data/output.log"
+        node.download_file(remote_path, local_path)
+        print(f"Data downloaded to {local_path}")
+    except Exception as e:
+        print("Error downloading file from honeypot:", e)
 
 
 def main():
@@ -136,6 +147,8 @@ def main():
 
     # Stop the honeypot
     stop_remote_honeypot(node)
+
+    retrieve_data_from_honeypot()
 
     print(
         "Honeypot session complete. Ready for controller to retrieve data, if applicable."

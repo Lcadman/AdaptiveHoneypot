@@ -1,0 +1,15 @@
+Host bastion
+    HostName bastion.fabric-testbed.net
+    User allen_cadman_0000151976
+    IdentityFile /Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric/keys/fabric_bastion_key
+    IdentitiesOnly yes
+
+Host fabric-node
+    HostName 2001:468:c00:ffc4:f816:3eff:fe0d:2647
+    User rocky
+    IdentityFile /Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric/keys/slice_key
+    ProxyJump bastion
+    IdentitiesOnly yes
+
+# the ssh command
+# ssh -F /Users/lcadman/Documents/School/Research/AdaptiveHoneypot/honeypot/fabric/ssh_config fabric-node

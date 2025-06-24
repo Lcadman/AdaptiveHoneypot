@@ -50,6 +50,7 @@ test-results/
 
 # Logs and local data
 *.log
+*.mmdb
 
 # Ignore local config
 config.yaml

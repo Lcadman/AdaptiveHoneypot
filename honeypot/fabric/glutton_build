@@ -1,0 +1,14 @@
+sudo -i
+
+dnf config-manager --set-enabled powertools
+dnf install -y git make golang gcc libpcap-devel iptables
+
+cd /local/honeypot
+git clone https://github.com/mushorg/glutton.git
+cd glutton
+make build
+
+./bin/server \
+  --interface eth0 \
+  --logpath /local/honeypot/glutton.log \
+  --debug
