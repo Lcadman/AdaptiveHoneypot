@@ -27,8 +27,16 @@ def run_controller_session(agent: SimpleQAgent):
 
     os.makedirs(LOG_DIR, exist_ok=True)
 
-    # Initial dummy state
-    state = {k: 0 for k in ['count', 'unique_src', 'avg_ports']}  # or load last state if desired
+    if os.path.exists(LOCAL_LOG_PATH):
+        df = parse_tcpdump_log(LOCAL_LOG_PATH, geoip_path=GEOIP_PATH)
+        if df.empty:
+            print("No TCP SYN data collected.")
+            return
+        state = extract_state(df)
+    else:
+        print("No previous log found — using initial state.")
+        state = {k: 0 for k in ['count', 'unique_src', 'avg_ports']}
+
     selected_dwell = agent.select_action(state)
 
     try:

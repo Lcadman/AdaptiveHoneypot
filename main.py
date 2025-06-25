@@ -19,7 +19,7 @@ def main():
         agent = SimpleQAgent(dwell_times, alpha=0.1, gamma=0.9, epsilon=0.1)
         print("🆕 Created new agent.")
 
-    total_runs = 20  # You can modify this for testing or continuous operation
+    total_runs = 200  # You can modify this for testing or continuous operation
     log_path = "logs/main_run_log.txt"
     os.makedirs("logs", exist_ok=True)
 
