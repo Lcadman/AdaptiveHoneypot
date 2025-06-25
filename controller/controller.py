@@ -42,7 +42,9 @@ def run_controller_session(agent: SimpleQAgent):
 
         print(f"\nRunning honeypot for {selected_dwell} minutes...")
         start_honeypot()
-        time.sleep(int(selected_dwell * 60))
+        print(f"Honeypot running for {selected_dwell * 60} seconds...")
+        for _ in tqdm(range(int(selected_dwell * 60)), desc="Dwell time"):
+            time.sleep(1)
         stop_honeypot()
         download_logs()
         delete_instance()

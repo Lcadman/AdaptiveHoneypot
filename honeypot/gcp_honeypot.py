@@ -9,7 +9,7 @@ ZONE = "us-central1-a"
 MACHINE_TYPE = "e2-medium"
 IMAGE_FAMILY = "debian-11"
 IMAGE_PROJECT = "debian-cloud"
-REMOTE_OUTPUT_LOG = "/home/lcadman/honeypot/data/tcpdump_output.log"
+REMOTE_OUTPUT_LOG = "/home/lcadman/honeypot/tcpdump_output.log"
 LOCAL_OUTPUT_LOG = "/Users/lcadman/Documents/School/Research/AdaptiveHoneypot/tcpdump_output.log"
 DWELL_TIME_SECONDS = 300
 
@@ -103,7 +103,7 @@ def setup_instance():
 
 def start_honeypot():
     command = (
-        "nohup sudo tcpdump -tttt -i any "
+        "nohup sudo tcpdump -n -tttt -i any "
         "'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack == 0' "
         "> ~/honeypot/tcpdump_output.log 2>&1 &"
     )
@@ -124,7 +124,7 @@ def download_logs():
         with yaspin(text="Downloading logs...", color="blue") as spinner:
             subprocess.run([
                 "gcloud", "compute", "scp",
-                f"{INSTANCE_NAME}:/home/lcadman/honeypot/data/tcpdump_output.log",
+                f"{INSTANCE_NAME}:/home/lcadman/honeypot/tcpdump_output.log",
                 LOCAL_OUTPUT_LOG,
                 "--zone", ZONE,
                 "--quiet"

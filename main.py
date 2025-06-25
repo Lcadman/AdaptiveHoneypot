@@ -8,8 +8,9 @@ import os
 AGENT_FILE = "logs/q_agent.pkl"
 
 def main():
-    dwell_times = np.linspace(5, 15, 21).tolist()
-    
+    #dwell_times = np.linspace(0, 25, 20).tolist()
+    dwell_times = [0, 2, 5, 10, 15, 20, 25, 30]
+
     if os.path.exists(AGENT_FILE):
         with open(AGENT_FILE, "rb") as f:
             agent = pickle.load(f)
@@ -18,7 +19,7 @@ def main():
         agent = SimpleQAgent(dwell_times, alpha=0.1, gamma=0.9, epsilon=0.1)
         print("🆕 Created new agent.")
 
-    total_runs = 10  # You can modify this for testing or continuous operation
+    total_runs = 20  # You can modify this for testing or continuous operation
     log_path = "logs/main_run_log.txt"
     os.makedirs("logs", exist_ok=True)
 
