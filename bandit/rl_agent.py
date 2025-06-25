@@ -40,16 +40,34 @@ class SimpleQAgent:
             self.q_table[state_tuple] = {action: 0.0 for action in self.dwell_times}
         return self.q_table[state_tuple]
 
+    # def select_action(self, state):
+    #     state_tuple = self.discretize_state(state)
+    #     q_values = self.get_q_values(state_tuple)
+
+    #     if random.random() < self.epsilon:
+    #         action = random.choice(self.dwell_times)
+    #         print(f"Exploring: Selected random dwell time: {action} minutes")
+    #     else:
+    #         action = max(q_values, key=q_values.get)
+    #         print(f"Exploiting: Selected dwell time: {action} minutes")
+    #     return action
+
     def select_action(self, state):
         state_tuple = self.discretize_state(state)
         q_values = self.get_q_values(state_tuple)
 
-        if random.random() < self.epsilon:
+        # Prefer untried actions first
+        untried_actions = [a for a, v in q_values.items() if v == 0.0]
+        if untried_actions:
+            action = random.choice(untried_actions)
+            print(f"Trying untried dwell time: {action} minutes")
+        elif random.random() < self.epsilon:
             action = random.choice(self.dwell_times)
             print(f"Exploring: Selected random dwell time: {action} minutes")
         else:
             action = max(q_values, key=q_values.get)
             print(f"Exploiting: Selected dwell time: {action} minutes")
+
         return action
 
     def update(self, state, action, reward, next_state):

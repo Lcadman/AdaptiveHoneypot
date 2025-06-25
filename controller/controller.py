@@ -56,6 +56,10 @@ def run_controller_session(agent: SimpleQAgent):
             return
 
         # Extract new state and reward
+        print("Parsed DF head:\n", df.head())
+        print("Row count:", len(df))
+        print("Unique SrcIP:", df["SrcIP"].nunique())
+        print("Unique DstPort:", df["DstPort"].nunique())
         new_state = extract_state(df)
         reward = compute_reward_for_dwell_time(df, selected_dwell)
         agent.update(state, selected_dwell, reward, new_state)
