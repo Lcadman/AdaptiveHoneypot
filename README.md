@@ -5,13 +5,10 @@ AdaptiveHoneypot is contextual bandit with reinforcement learning project that d
 ## Table of Contents
 
 - [Project Overview](#project-overview)
+- [Key Objectives](#key-objectives)
 - [Features](#features)
 - [Architecture](#architecture)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Development Roadmap](#development-roadmap)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Project Overview
 

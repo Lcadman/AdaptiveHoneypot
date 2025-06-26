@@ -56,8 +56,8 @@ class SimpleQAgent:
         state_tuple = self.discretize_state(state)
         q_values = self.get_q_values(state_tuple)
 
-        # Prefer untried actions first
-        untried_actions = [a for a, v in q_values.items() if v == 0.0]
+        # Prefer untried actions first (treat only truly uninitialized Q-values as untried)
+        untried_actions = [a for a, v in q_values.items() if abs(v) < 1e-6]
         if untried_actions:
             action = random.choice(untried_actions)
             print(f"Trying untried dwell time: {action} minutes")
